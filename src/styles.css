@@ -1,1 +1,120 @@
-/* You can add global styles to this file, and also import other style files */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+}
+
+body,
+body[data-theme="dark"] {
+  --bg-page: #121212;
+  --bg-card: #1e1e1e;
+  --bg-card-border: rgba(255, 255, 255, 0.12);
+  --text-primary: #f1f1f1;
+  --text-secondary: #b3b3b3;
+  --text-heading: #ffffff;
+  --accent-rating: #f5c518;
+  --accent-info: #d4a053;
+  --accent-tertiary: #c9a0dc;
+  --accent-gradient-start: #e85d5d;
+  --accent-gradient-end: #d4a053;
+  --btn-primary-bg: linear-gradient(90deg, #e85d5d, #f0944e);
+  --btn-primary-text: #ffffff;
+  --btn-secondary-bg: rgba(255, 255, 255, 0.08);
+  --btn-secondary-text: #f1f1f1;
+  --btn-secondary-border: rgba(255, 255, 255, 0.2);
+  --rating-bar-bg: rgba(255, 255, 255, 0.12);
+  --rating-fill: linear-gradient(90deg, #d4a053, #e8b96a);
+  --genre-bg: rgba(212, 160, 83, 0.12);
+  --genre-text: #d4a053;
+  --genre-border: rgba(212, 160, 83, 0.3);
+  --divider: rgba(255, 255, 255, 0.08);
+  --shadow-elevated: 0 16px 40px rgba(0, 0, 0, 0.6);
+}
+
+body[data-theme="light"] {
+  --bg-page: #f8f8f8;
+  --bg-card: #ffffff;
+  --bg-card-border: rgba(0, 0, 0, 0.1);
+  --text-primary: #1a1a1a;
+  --text-secondary: #555555;
+  --text-heading: #111111;
+  --accent-rating: #8a6d00;
+  --accent-info: #96712b;
+  --accent-tertiary: #6b3fa0;
+  --accent-gradient-start: #c0392b;
+  --accent-gradient-end: #96712b;
+  --btn-primary-bg: linear-gradient(90deg, #c0392b, #d35f2a);
+  --btn-primary-text: #ffffff;
+  --btn-secondary-bg: #f0f0f0;
+  --btn-secondary-text: #1a1a1a;
+  --btn-secondary-border: rgba(0, 0, 0, 0.15);
+  --rating-bar-bg: rgba(0, 0, 0, 0.08);
+  --rating-fill: linear-gradient(90deg, #96712b, #b8893a);
+  --genre-bg: rgba(150, 113, 43, 0.1);
+  --genre-text: #96712b;
+  --genre-border: rgba(150, 113, 43, 0.25);
+  --divider: rgba(0, 0, 0, 0.08);
+  --shadow-elevated: 0 12px 30px rgba(0, 0, 0, 0.15);
+}
+
+@media (prefers-color-scheme: dark) {
+  body[data-theme="system"] {
+    --bg-page: #121212;
+    --bg-card: #1e1e1e;
+    --bg-card-border: rgba(255, 255, 255, 0.12);
+    --text-primary: #f1f1f1;
+    --text-secondary: #b3b3b3;
+    --text-heading: #ffffff;
+    --accent-rating: #f5c518;
+    --accent-info: #d4a053;
+    --accent-tertiary: #c9a0dc;
+    --accent-gradient-start: #e85d5d;
+    --accent-gradient-end: #d4a053;
+    --btn-primary-bg: linear-gradient(90deg, #e85d5d, #f0944e);
+    --btn-primary-text: #ffffff;
+    --btn-secondary-bg: rgba(255, 255, 255, 0.08);
+    --btn-secondary-text: #f1f1f1;
+    --btn-secondary-border: rgba(255, 255, 255, 0.2);
+    --rating-bar-bg: rgba(255, 255, 255, 0.12);
+    --rating-fill: linear-gradient(90deg, #d4a053, #e8b96a);
+    --genre-bg: rgba(212, 160, 83, 0.12);
+    --genre-text: #d4a053;
+    --genre-border: rgba(212, 160, 83, 0.3);
+    --divider: rgba(255, 255, 255, 0.08);
+    --shadow-elevated: 0 16px 40px rgba(0, 0, 0, 0.6);
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  body[data-theme="system"] {
+    --bg-page: #f8f8f8;
+    --bg-card: #ffffff;
+    --bg-card-border: rgba(0, 0, 0, 0.1);
+    --text-primary: #1a1a1a;
+    --text-secondary: #555555;
+    --text-heading: #111111;
+    --accent-rating: #8a6d00;
+    --accent-info: #96712b;
+    --accent-tertiary: #6b3fa0;
+    --accent-gradient-start: #c0392b;
+    --accent-gradient-end: #96712b;
+    --btn-primary-bg: linear-gradient(90deg, #c0392b, #d35f2a);
+    --btn-primary-text: #ffffff;
+    --btn-secondary-bg: #f0f0f0;
+    --btn-secondary-text: #1a1a1a;
+    --btn-secondary-border: rgba(0, 0, 0, 0.15);
+    --rating-bar-bg: rgba(0, 0, 0, 0.08);
+    --rating-fill: linear-gradient(90deg, #96712b, #b8893a);
+    --genre-bg: rgba(150, 113, 43, 0.1);
+    --genre-text: #96712b;
+    --genre-border: rgba(150, 113, 43, 0.25);
+    --divider: rgba(0, 0, 0, 0.08);
+    --shadow-elevated: 0 12px 30px rgba(0, 0, 0, 0.15);
+  }
+}
+
+body {
+  background-color: var(--bg-page);
+  color: var(--text-primary);
+}

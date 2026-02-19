@@ -1,0 +1,121 @@
+@if (person.name) {
+<div class="person-page">
+  <a routerLink="/" class="back-link" aria-label="Back to search">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="19" y1="12" x2="5" y2="12"></line>
+      <polyline points="12 19 5 12 12 5"></polyline>
+    </svg>
+    Back to Search
+  </a>
+
+  <div class="main-content">
+    <!-- Left: Photo -->
+    <div class="photo-section">
+      @if (person.profile_path && !profileFailed) {
+        <img [src]="getProfilePath()" [alt]="person.name + ' photo'" class="person-photo" (error)="profileFailed = true">
+      } @else {
+        <div class="person-photo-placeholder">
+          <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          <span class="placeholder-name">{{person.name}}</span>
+        </div>
+      }
+    </div>
+
+    <!-- Right: Details -->
+    <div class="details-section">
+      <h1 class="person-name">{{person.name}}</h1>
+
+      @if (person.known_for_department) {
+        <span class="department-tag">{{person.known_for_department}}</span>
+      }
+
+      <div class="detail-rows">
+        @if (person.birthday) {
+          <span class="detail-item">
+            <span class="detail-label">Born:</span>
+            <span class="detail-value">{{person.birthday}}</span>
+          </span>
+        }
+        @if (person.deathday) {
+          <span class="detail-item">
+            <span class="detail-label">Died:</span>
+            <span class="detail-value">{{person.deathday}}</span>
+          </span>
+        }
+        @if (getAge() !== null) {
+          <span class="detail-item">
+            <span class="detail-label">Age:</span>
+            <span class="detail-value">{{getAge()}}</span>
+          </span>
+        }
+        @if (person.place_of_birth) {
+          <span class="detail-item">
+            <span class="detail-label">Birthplace:</span>
+            <span class="detail-value">{{person.place_of_birth}}</span>
+          </span>
+        }
+      </div>
+
+      @if (person.also_known_as && person.also_known_as.length > 0) {
+        <div class="also-known">
+          <span class="detail-label">Also known as:</span>
+          <span class="detail-value">{{person.also_known_as.join(', ')}}</span>
+        </div>
+      }
+
+      @if (person.biography) {
+        <div class="biography">
+          <h2 class="section-title">Biography</h2>
+          <p>{{person.biography}}</p>
+        </div>
+      }
+
+      @if (person.homepage || person.imdb_id) {
+        <div class="external-links">
+          @if (person.homepage) {
+            <a [href]="person.homepage" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+              Website
+            </a>
+          }
+          @if (person.imdb_id) {
+            <a [href]="'https://www.imdb.com/name/' + person.imdb_id" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              IMDb
+            </a>
+          }
+        </div>
+      }
+
+    </div>
+  </div>
+
+  @if (actingMovies.length > 0) {
+    <div class="credits-section">
+      <h2 class="section-title">Filmography ({{actingMovies.length}})</h2>
+      <div class="credits-grid">
+        @for (movie of actingMovies; track movie.id) {
+          <app-moviecard [movie]="movie"></app-moviecard>
+        }
+      </div>
+    </div>
+  }
+
+  @if (crewMovies.length > 0) {
+    <div class="credits-section">
+      <h2 class="section-title">Crew Credits ({{crewMovies.length}})</h2>
+      <div class="credits-grid">
+        @for (movie of crewMovies; track movie.id) {
+          <app-moviecard [movie]="movie"></app-moviecard>
+        }
+      </div>
+    </div>
+  }
+</div>
+}
+@else {
+<p class="no-person">No person found</p>
+}
