@@ -14,7 +14,6 @@ import { LoaderComponent } from '../loader/loader.component';
   selector: 'app-person',
   standalone: true,
   imports: [MoviecardComponent, LoaderComponent],
-  providers: [MovieService],
   templateUrl: './person.component.html',
   styleUrl: './person.component.css'
 })
