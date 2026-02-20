@@ -6,82 +6,98 @@ import { MovieCollection } from '../../models/collection';
 import { MovieSearchResponse } from '../../models/search';
 import { MovieVideosResponse } from '../../models/video';
 import { Person, PersonMovieCredits } from '../../models/person';
-
-// connect to to tmdb api
-// https://api.themoviedb.org/3/discover/movie?api_key=YOUR_API_KEY
-
-const YOUR_API_KEY = 'b878f255836a67e76ca1b65069462397';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
-
 })
 export class MovieService {
-
   http: HttpClient = inject(HttpClient);
 
+  private readonly tmdbBaseUrl = environment.tmdbBaseUrl;
+  private readonly tmdbApiKey = environment.tmdbApiKey;
+
+  private buildUrl(path: string, params: Record<string, string | number | undefined> = {}) {
+    const url = new URL(`${this.tmdbBaseUrl}/${path.replace(/^\//, '')}`);
+    const queryParams = new URLSearchParams({ api_key: this.tmdbApiKey });
+
+    Object.entries(params).forEach(([key, value]) => {
+      if (value !== undefined && value !== null && value !== '') {
+        queryParams.set(key, String(value));
+      }
+    });
+
+    url.search = queryParams.toString();
+    return url.toString();
+  }
 
   getMovies(searchQuery: string) {
-    if(searchQuery) {
-      return this.http.get<Movie[]>(`https://api.themoviedb.org/3/discover/movie?api_key=${YOUR_API_KEY}&query=${searchQuery}`);
-    }
-    return this.http.get<Movie[]>(`https://api.themoviedb.org/3/discover/movie?api_key=${YOUR_API_KEY}`);
+    return this.http.get<Movie[]>(
+      this.buildUrl('discover/movie', { query: searchQuery }),
+    );
   }
 
   getMovie(id: number) {
-    return this.http.get<Movie>(`https://api.themoviedb.org/3/movie/${id}?api_key=${YOUR_API_KEY}`);
+    return this.http.get<Movie>(this.buildUrl(`movie/${id}`));
   }
 
   getMovieCredits(id: number) {
-    return this.http.get<MovieCredits>(`https://api.themoviedb.org/3/movie/${id}/credits?api_key=${YOUR_API_KEY}`);
+    return this.http.get<MovieCredits>(this.buildUrl(`movie/${id}/credits`));
   }
 
   getMovieReviews(id: number) {
-    return this.http.get(`https://api.themoviedb.org/3/movie/${id}/reviews?api_key=${YOUR_API_KEY}`);
+    return this.http.get(this.buildUrl(`movie/${id}/reviews`));
   }
 
   getMovieSimilar(id: number) {
-    return this.http.get(`https://api.themoviedb.org/3/movie/${id}/similar?api_key=${YOUR_API_KEY}`);
+    return this.http.get(this.buildUrl(`movie/${id}/similar`));
   }
 
   getMovieVideos(id: number) {
-    return this.http.get<MovieVideosResponse>(`https://api.themoviedb.org/3/movie/${id}/videos?api_key=${YOUR_API_KEY}`);
+    return this.http.get<MovieVideosResponse>(this.buildUrl(`movie/${id}/videos`));
   }
 
   getMovieImages(id: number) {
-    return this.http.get(`https://api.themoviedb.org/3/movie/${id}/images?api_key=${YOUR_API_KEY}`);
+    return this.http.get(this.buildUrl(`movie/${id}/images`));
   }
 
   getMovieRecommendations(id: number) {
-    return this.http.get<MovieSearchResponse>(`https://api.themoviedb.org/3/movie/${id}/recommendations?api_key=${YOUR_API_KEY}`);
+    return this.http.get<MovieSearchResponse>(
+      this.buildUrl(`movie/${id}/recommendations`),
+    );
   }
 
   getMovieTranslations(id: number) {
-    return this.http.get(`https://api.themoviedb.org/3/movie/${id}/translations?api_key=${YOUR_API_KEY}`);
+    return this.http.get(this.buildUrl(`movie/${id}/translations`));
   }
 
   getMovieKeywords(id: number) {
-    return this.http.get(`https://api.themoviedb.org/3/movie/${id}/keywords?api_key=${YOUR_API_KEY}`);
+    return this.http.get(this.buildUrl(`movie/${id}/keywords`));
   }
 
   getCollection(id: number) {
-    return this.http.get<MovieCollection>(`https://api.themoviedb.org/3/collection/${id}?api_key=${YOUR_API_KEY}`);
+    return this.http.get<MovieCollection>(this.buildUrl(`collection/${id}`));
   }
 
   getGenres() {
-    return this.http.get<{ genres: { id: number; name: string }[] }>(`https://api.themoviedb.org/3/genre/movie/list?api_key=${YOUR_API_KEY}`);
+    return this.http.get<{ genres: { id: number; name: string }[] }>(
+      this.buildUrl('genre/movie/list'),
+    );
   }
 
   searchMovies(query: string, page: number = 1) {
-    return this.http.get<MovieSearchResponse>(`https://api.themoviedb.org/3/search/movie?api_key=${YOUR_API_KEY}&query=${encodeURIComponent(query)}&page=${page}`);
+    return this.http.get<MovieSearchResponse>(
+      this.buildUrl('search/movie', { query, page }),
+    );
   }
 
   getPerson(id: number) {
-    return this.http.get<Person>(`https://api.themoviedb.org/3/person/${id}?api_key=${YOUR_API_KEY}`);
+    return this.http.get<Person>(this.buildUrl(`person/${id}`));
   }
 
   getPersonMovieCredits(id: number) {
-    return this.http.get<PersonMovieCredits>(`https://api.themoviedb.org/3/person/${id}/movie_credits?api_key=${YOUR_API_KEY}`);
+    return this.http.get<PersonMovieCredits>(
+      this.buildUrl(`person/${id}/movie_credits`),
+    );
   }
-
 }
