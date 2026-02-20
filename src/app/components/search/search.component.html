@@ -1,44 +1,6 @@
 <div class="search-page">
-  <div class="search-header">
-    <div class="header-top">
-      <a routerLink="/favorites" class="favorites-link" aria-label="Go to favorites">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-        My Favorites
-      </a>
-    </div>
-    <form class="search-form" role="search" aria-label="Movie search" (submit)="$event.preventDefault(); search()">
-      <div class="search-input-wrapper" (click)="searchInput.focus()">
-        <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="11" cy="11" r="8"></circle>
-          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-        </svg>
-        <input
-          #searchInput
-          type="text"
-          class="search-input"
-          aria-label="Search for movies, actors, directors"
-          [value]="searchQuery()"
-          (input)="onSearchInput($event)"
-          autofocus
-        />
-        @if (searchQuery()) {
-          <button type="button" class="clear-search-btn" (click)="clearSearch()" aria-label="Clear search">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="18" y1="6" x2="6" y2="18"></line>
-              <line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
-          </button>
-        }
-        <button type="submit" class="search-btn" aria-label="Search">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="11" cy="11" r="8"></circle>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-          </svg>
-        </button>
-      </div>
-    </form>
-
-    @if (recentSearches().length > 0) {
+  @if (recentSearches().length > 0 && !lastSearchQuery()) {
+    <div class="search-header">
       <div class="recent-searches">
         <div class="recent-searches-header">
           <h3 class="recent-searches-title">RECENT SEARCHES</h3>
@@ -50,8 +12,8 @@
           }
         </div>
       </div>
-    }
-  </div>
+    </div>
+  }
 
   @if (results().length > 0) {
     <p class="results-count">Showing {{ totalResults() }} results for "{{ lastSearchQuery() }}"</p>
@@ -78,5 +40,14 @@
     }
   } @else if (lastSearchQuery()) {
     <p class="no-results">No results found for "{{ lastSearchQuery() }}"</p>
+  } @else if (!lastSearchQuery() && recentSearches().length === 0) {
+    <div class="empty-state">
+      <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <h2 class="empty-state-title">Discover Movies</h2>
+      <p class="empty-state-text">Use the search bar above to find your favorite movies, actors, and more.</p>
+    </div>
   }
 </div>

@@ -5,7 +5,7 @@ import { CurrencyPipe, DecimalPipe } from '@angular/common';
 import { forkJoin } from 'rxjs';
 import { switchMap, filter } from 'rxjs/operators';
 import { Movie } from '../../models/movie';
-import { CastMember } from '../../models/credits';
+import { CastMember, CrewMember } from '../../models/credits';
 import { MovieVideo } from '../../models/video';
 import { MovieService } from '../../services/movie/movie.service';
 import { StorageService } from '../../services/storage/storage.service';
@@ -29,8 +29,9 @@ export class MovieComponent {
 
   movie: Movie = {} as Movie;
   genreNames: string[] = [];
-  directors: { id: number; name: string }[] = [];
+  directors: CrewMember[] = [];
   topCast: CastMember[] = [];
+  topCrew: CrewMember[] = [];
   languages: string[] = [];
   trailerKey: string = '';
   relatedMovies: Movie[] = [];
@@ -54,6 +55,7 @@ export class MovieComponent {
       takeUntilDestroyed(this.destroyRef)
     ).subscribe({
       next: ({ movie, credits, genres, videos, recommendations }) => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
         this.movie = movie;
         this.posterFailed = false;
         this.isFavorited = this.storageService.isFavorite(String(movie.id));
@@ -65,10 +67,19 @@ export class MovieComponent {
           this.genreNames = movie.genre_ids.map(gid => genreMap.get(gid) ?? 'Unknown');
         }
 
-        this.directors = credits.crew
-          .filter(c => c.job === 'Director')
-          .map(d => ({ id: d.id, name: d.name }));
+        this.directors = credits.crew.filter(c => c.job === 'Director');
         this.topCast = credits.cast.slice(0, 6);
+
+        const keyJobs = ['Director', 'Writer', 'Screenplay', 'Producer', 'Executive Producer', 'Director of Photography', 'Original Music Composer', 'Editor'];
+        const seen = new Set<number>();
+        this.topCrew = credits.crew
+          .filter(c => keyJobs.includes(c.job))
+          .filter(c => {
+            if (seen.has(c.id)) return false;
+            seen.add(c.id);
+            return true;
+          })
+          .slice(0, 6);
 
         if (movie.spoken_languages?.length) {
           this.languages = movie.spoken_languages.map(l => l.english_name);

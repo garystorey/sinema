@@ -11,7 +11,7 @@ import { MoviecardComponent } from '../moviecard/moviecard.component';
 @Component({
   selector: 'app-person',
   standalone: true,
-  imports: [RouterLink, MoviecardComponent],
+  imports: [MoviecardComponent],
   providers: [MovieService],
   templateUrl: './person.component.html',
   styleUrl: './person.component.css'

@@ -2,48 +2,29 @@
   background-color: var(--bg-page);
   color: var(--text-primary);
   min-height: 80vh;
-  padding: 30px 40px;
+  padding: 2.5rem 2.5rem 4rem;
   position: relative;
-  transition:
-    background-color 0.3s ease,
-    color 0.3s ease;
-}
-
-.back-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: var(--text-secondary);
-  text-decoration: none;
-  font-size: 0.95rem;
-  margin: 0 auto 1.5rem;
-  max-width: 1200px;
-  transition: color 0.2s ease;
-}
-
-.back-link:hover {
-  color: var(--text-primary);
 }
 
 .main-content {
   display: grid;
-  grid-template-columns: 1fr 2fr;
-  gap: 40px;
+  grid-template-columns: 300px 1fr;
+  gap: 3rem;
   max-width: 1200px;
   margin: 0 auto;
 }
 
 .photo-section {
   position: sticky;
-  top: 30px;
+  top: 5rem;
   align-self: start;
 }
 
 .person-photo {
   width: 100%;
-  border-radius: 12px;
+  border-radius: 0.75rem;
   box-shadow: var(--shadow-elevated);
-  transition: transform 0.3s ease;
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .person-photo:hover {
@@ -53,8 +34,12 @@
 .person-photo-placeholder {
   width: 100%;
   aspect-ratio: 2 / 3;
-  border-radius: 12px;
-  background: linear-gradient(145deg, var(--bg-card), var(--bg-page));
+  border-radius: 0.75rem;
+  background: linear-gradient(
+    160deg,
+    var(--bg-card),
+    var(--bg-surface, var(--bg-page))
+  );
   border: 1px solid var(--bg-card-border);
   display: flex;
   flex-direction: column;
@@ -65,7 +50,7 @@
 }
 
 .person-photo-placeholder svg {
-  opacity: 0.3;
+  opacity: 0.2;
 }
 
 .placeholder-name {
@@ -77,46 +62,50 @@
 }
 
 .details-section {
-  padding: 10px 0;
+  padding: 0.5rem 0;
 }
 
 .person-name {
-  font-size: 2.8rem;
+  font-size: 2.75rem;
   font-weight: 800;
-  margin-bottom: 12px;
+  margin-bottom: 0.75rem;
   color: var(--text-heading);
-  line-height: 1.2;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  font-family: "Space Grotesk", "Inter", sans-serif;
 }
 
 .department-tag {
   display: inline-block;
   background: var(--genre-bg);
   color: var(--genre-text);
-  padding: 8px 16px;
-  border-radius: 20px;
-  font-size: 0.9rem;
+  padding: 0.375rem 0.875rem;
+  border-radius: 2rem;
+  font-size: 0.8rem;
   font-weight: 500;
   border: 1px solid var(--genre-border);
   margin-bottom: 1rem;
+  letter-spacing: 0.01em;
 }
 
 .detail-rows {
   display: flex;
   flex-wrap: wrap;
-  gap: 1.5rem;
-  margin: 0.5rem 0 1.5rem;
-  font-size: 1rem;
+  gap: 1.25rem;
+  margin: 0.75rem 0 1.25rem;
+  font-size: 0.925rem;
   color: var(--text-secondary);
 }
 
 .detail-item {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.375rem;
 }
 
 .detail-label {
   color: var(--text-secondary);
+  font-weight: 500;
 }
 
 .detail-value {
@@ -125,16 +114,17 @@
 
 .also-known {
   margin-bottom: 1rem;
-  font-size: 0.95rem;
+  font-size: 0.875rem;
   display: flex;
-  gap: 0.5rem;
+  gap: 0.375rem;
   flex-wrap: wrap;
+  line-height: 1.6;
 }
 
 .biography {
-  margin: 24px 0;
+  margin: 1.5rem 0;
   line-height: 1.8;
-  font-size: 1.05rem;
+  font-size: 1rem;
   color: var(--text-secondary);
 }
 
@@ -143,12 +133,13 @@
 }
 
 .section-title {
-  font-size: 1.6rem;
+  font-size: 1.4rem;
   font-weight: 700;
-  margin: 28px 0 16px;
+  margin: 2rem 0 1rem;
   position: relative;
-  padding-bottom: 10px;
+  padding-bottom: 0.625rem;
   color: var(--text-heading);
+  letter-spacing: -0.01em;
 }
 
 .section-title::after {
@@ -156,7 +147,7 @@
   position: absolute;
   bottom: 0;
   left: 0;
-  width: 50px;
+  width: 40px;
   height: 3px;
   background: linear-gradient(
     90deg,
@@ -168,24 +159,33 @@
 
 .external-links {
   display: flex;
-  gap: 16px;
-  margin: 28px 0;
+  gap: 0.75rem;
+  margin: 1.75rem 0;
   flex-wrap: wrap;
 }
 
 .btn {
-  padding: 14px 28px;
+  padding: 0.75rem 1.5rem;
   border: none;
-  border-radius: 10px;
-  font-size: 1rem;
+  border-radius: 0.625rem;
+  font-size: 0.925rem;
   font-weight: 600;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  transition: all 0.3s ease;
+  gap: 0.5rem;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background-color 0.2s ease;
   text-decoration: none;
+  font-family: inherit;
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--accent-info);
+  outline-offset: 2px;
 }
 
 .btn-secondary {
@@ -196,7 +196,7 @@
 
 .btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
 }
 
 .credits-section {
@@ -208,8 +208,8 @@
 
 .credits-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
+  gap: 1rem;
   margin-top: 1.25rem;
 }
 
@@ -222,20 +222,25 @@
 
 @media (max-width: 900px) {
   .person-page {
-    padding: 20px 16px;
+    padding: 1.5rem 1rem 3rem;
   }
 
   .main-content {
     grid-template-columns: 1fr;
+    gap: 2rem;
   }
 
   .photo-section {
     position: static;
-    max-width: 400px;
+    max-width: 300px;
     margin: 0 auto;
   }
 
   .person-name {
     font-size: 2rem;
+  }
+
+  .credits-grid {
+    grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
   }
 }

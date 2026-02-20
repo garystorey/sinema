@@ -1,18 +1,17 @@
-import { Component, DestroyRef, inject, signal, viewChild, ElementRef, afterNextRender } from '@angular/core';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, filter, switchMap } from 'rxjs/operators';
+import { ActivatedRoute, Router } from '@angular/router';
+import { distinctUntilChanged, filter, switchMap } from 'rxjs/operators';
 import { Movie } from '../../models/movie';
 import { MovieSearchResponse } from '../../models/search';
 import { MovieService } from '../../services/movie/movie.service';
 import { StorageService } from '../../services/storage/storage.service';
-import { RouterLink } from '@angular/router';
 import { MoviecardComponent } from "../moviecard/moviecard.component";
 
 @Component({
   selector: 'app-search',
   standalone: true,
-  imports: [MoviecardComponent, RouterLink],
+  imports: [MoviecardComponent],
   providers: [MovieService],
   templateUrl: './search.component.html',
   styleUrl: './search.component.css'
@@ -20,19 +19,17 @@ import { MoviecardComponent } from "../moviecard/moviecard.component";
 
 export class SearchComponent {
   results = signal<Movie[]>([]);
-  searchQuery = signal('');
   lastSearchQuery = signal('');
   totalResults = signal(0);
   currentPage = signal(1);
   totalPages = signal(0);
   recentSearches = signal<string[]>([]);
 
-  searchInput = viewChild<ElementRef<HTMLInputElement>>('searchInput');
-
-  private searchSubject = new Subject<string>();
   private destroyRef = inject(DestroyRef);
   private movieService = inject(MovieService);
   private storageService = inject(StorageService);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
 
   constructor() {
     const saved = this.storageService.getItem('recentSearches');
@@ -40,16 +37,18 @@ export class SearchComponent {
       this.recentSearches.set(JSON.parse(saved));
     }
 
-    this.searchSubject.pipe(
-      debounceTime(1000),
+    this.route.queryParams.pipe(
+      switchMap(params => {
+        const q = (params['q'] || '').trim();
+        return [q];
+      }),
       distinctUntilChanged(),
-      filter(query => query.trim().length > 0),
+      filter(query => query.length > 0),
       switchMap(query => {
-        const trimmed = query.trim();
-        this.lastSearchQuery.set(trimmed);
+        this.lastSearchQuery.set(query);
         this.currentPage.set(1);
-        this.storageService.setItem('lastSearchQuery', trimmed);
-        return this.movieService.searchMovies(trimmed);
+        this.storageService.setItem('lastSearchQuery', query);
+        return this.movieService.searchMovies(query);
       }),
       takeUntilDestroyed(this.destroyRef)
     ).subscribe({
@@ -63,55 +62,10 @@ export class SearchComponent {
         console.error(error);
       }
     });
-
-    const lastQuery = this.storageService.getItem('lastSearchQuery');
-    if (lastQuery) {
-      this.searchQuery.set(lastQuery);
-      this.searchSubject.next(lastQuery);
-    }
-
-    afterNextRender(() => {
-      const input = this.searchInput();
-      if (input) {
-        input.nativeElement.focus();
-        input.nativeElement.value = this.searchQuery();
-      }
-    });
-  }
-
-  onSearchInput(event: Event): void {
-    const value = (event.target as HTMLInputElement).value;
-    this.searchQuery.set(value);
-    this.searchSubject.next(value);
-  }
-
-  clearSearch(): void {
-    this.searchQuery.set('');
-    this.lastSearchQuery.set('');
-    this.results.set([]);
-    this.totalResults.set(0);
-    this.totalPages.set(0);
-    this.storageService.removeItem('lastSearchQuery');
-    const input = this.searchInput();
-    if (input) {
-      input.nativeElement.value = '';
-      input.nativeElement.focus();
-    }
-  }
-
-  search(): void {
-    const query = this.searchQuery().trim();
-    if (!query) return;
-    this.searchSubject.next(query);
   }
 
   searchRecent(term: string): void {
-    this.searchQuery.set(term);
-    const input = this.searchInput();
-    if (input) {
-      input.nativeElement.value = term;
-    }
-    this.searchSubject.next(term);
+    this.router.navigate([''], { queryParams: { q: term } });
   }
 
   goToPage(page: number): void {
