@@ -1,4 +1,5 @@
-import { Injectable, signal } from '@angular/core';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
+import { Inject, Injectable, PLATFORM_ID, signal } from '@angular/core';
 
 export interface Theme {
   id: string;
@@ -17,21 +18,49 @@ const STORAGE_KEY = 'app-theme';
 export class ThemeService {
   current = signal<string>(this.load());
 
-  constructor() {
+  constructor(
+    @Inject(DOCUMENT) private document: Document,
+    @Inject(PLATFORM_ID) private platformId: object,
+  ) {
     this.apply(this.current());
+  }
+
+  private getStorage(): Storage | null {
+    if (!isPlatformBrowser(this.platformId)) {
+      return null;
+    }
+
+    try {
+      return localStorage;
+    } catch {
+      return null;
+    }
   }
 
   set(themeId: string): void {
     this.current.set(themeId);
     this.apply(themeId);
-    localStorage.setItem(STORAGE_KEY, themeId);
+
+    try {
+      this.getStorage()?.setItem(STORAGE_KEY, themeId);
+    } catch {
+      // no-op when storage is unavailable
+    }
   }
 
   private load(): string {
-    return localStorage.getItem(STORAGE_KEY) ?? 'default';
+    try {
+      return this.getStorage()?.getItem(STORAGE_KEY) ?? 'default';
+    } catch {
+      return 'default';
+    }
   }
 
   private apply(themeId: string): void {
-    document.body.setAttribute('data-theme', themeId);
+    if (!isPlatformBrowser(this.platformId) || !this.document?.body) {
+      return;
+    }
+
+    this.document.body.setAttribute('data-theme', themeId);
   }
 }
