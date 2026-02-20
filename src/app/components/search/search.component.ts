@@ -12,7 +12,6 @@ import { MoviecardComponent } from "../moviecard/moviecard.component";
   selector: 'app-search',
   standalone: true,
   imports: [MoviecardComponent],
-  providers: [MovieService],
   templateUrl: './search.component.html',
   styleUrl: './search.component.css'
 })

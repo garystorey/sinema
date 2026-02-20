@@ -16,7 +16,6 @@ import { LoaderComponent } from '../loader/loader.component';
   selector: 'app-movie',
   standalone: true,
   imports: [DecimalPipe, CurrencyPipe, RouterLink, MoviecardComponent, LoaderComponent],
-  providers: [MovieService],
   templateUrl: './movie.component.html',
   styleUrl: './movie.component.css'
 })
