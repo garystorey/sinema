@@ -8,11 +8,12 @@ import { Person } from '../../models/person';
 import { Movie } from '../../models/movie';
 import { MovieService } from '../../services/movie/movie.service';
 import { MoviecardComponent } from '../moviecard/moviecard.component';
+import { LoaderComponent } from '../loader/loader.component';
 
 @Component({
   selector: 'app-person',
   standalone: true,
-  imports: [MoviecardComponent],
+  imports: [MoviecardComponent, LoaderComponent],
   providers: [MovieService],
   templateUrl: './person.component.html',
   styleUrl: './person.component.css'
@@ -24,6 +25,7 @@ export class PersonComponent {
   private destroyRef = inject(DestroyRef);
   private location = inject(Location);
 
+  loading: boolean = true;
   person: Person = {} as Person;
   actingMovies: Movie[] = [];
   crewMovies: Movie[] = [];
@@ -43,6 +45,7 @@ export class PersonComponent {
       takeUntilDestroyed(this.destroyRef)
     ).subscribe({
       next: ({ person, credits }) => {
+        this.loading = false;
         this.person = person;
         this.profileFailed = false;
 
@@ -83,6 +86,7 @@ export class PersonComponent {
           .map(toMovie);
       },
       error: (error) => {
+        this.loading = false;
         console.error(error);
       }
     });

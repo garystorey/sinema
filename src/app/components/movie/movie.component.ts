@@ -1,4 +1,5 @@
 import { Component, DestroyRef, inject } from '@angular/core';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CurrencyPipe, DecimalPipe, Location } from '@angular/common';
@@ -10,10 +11,11 @@ import { MovieVideo } from '../../models/video';
 import { MovieService } from '../../services/movie/movie.service';
 import { StorageService } from '../../services/storage/storage.service';
 import { MoviecardComponent } from '../moviecard/moviecard.component';
+import { LoaderComponent } from '../loader/loader.component';
 @Component({
   selector: 'app-movie',
   standalone: true,
-  imports: [DecimalPipe, CurrencyPipe, RouterLink, MoviecardComponent],
+  imports: [DecimalPipe, CurrencyPipe, RouterLink, MoviecardComponent, LoaderComponent],
   providers: [MovieService],
   templateUrl: './movie.component.html',
   styleUrl: './movie.component.css'
@@ -25,8 +27,10 @@ export class MovieComponent {
   private route = inject(ActivatedRoute);
   private destroyRef = inject(DestroyRef);
   private location = inject(Location);
+  private sanitizer = inject(DomSanitizer);
 
   isFavorited: boolean = false;
+  loading: boolean = true;
 
   movie: Movie = {} as Movie;
   genreNames: string[] = [];
@@ -35,6 +39,7 @@ export class MovieComponent {
   topCrew: CrewMember[] = [];
   languages: string[] = [];
   trailerKey: string = '';
+  showTrailer: boolean = false;
   relatedMovies: Movie[] = [];
   posterFailed: boolean = false;
   posterPath: string = 'https://image.tmdb.org/t/p/w500';
@@ -57,6 +62,7 @@ export class MovieComponent {
     ).subscribe({
       next: ({ movie, credits, genres, videos, recommendations }) => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
+        this.loading = false;
         this.movie = movie;
         this.posterFailed = false;
         this.isFavorited = this.storageService.isFavorite(String(movie.id));
@@ -116,6 +122,7 @@ export class MovieComponent {
         }
       },
       error: (error) => {
+        this.loading = false;
         console.error(error);
       }
     });
@@ -139,10 +146,20 @@ export class MovieComponent {
     return h > 0 ? `${h}h ${m}m` : `${m}m`;
   }
 
+  getTrailerUrl(): SafeResourceUrl {
+    return this.sanitizer.bypassSecurityTrustResourceUrl(
+      `https://www.youtube.com/embed/${this.trailerKey}?autoplay=1&rel=0`
+    );
+  }
+
   playTrailer(): void {
     if (this.trailerKey) {
-      window.open(`https://www.youtube.com/watch?v=${this.trailerKey}`, '_blank');
+      this.showTrailer = true;
     }
+  }
+
+  closeTrailer(): void {
+    this.showTrailer = false;
   }
 
   toggleFavorite(): void {

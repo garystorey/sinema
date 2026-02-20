@@ -1,0 +1,31 @@
+<div class="theme-switcher">
+  <button
+    class="theme-toggle"
+    (click)="toggle()"
+    [attr.aria-expanded]="open()"
+    aria-haspopup="listbox"
+    aria-label="Change theme"
+  >
+    <span class="theme-swatch" [attr.data-swatch]="themeService.current()"></span>
+    <svg class="chevron" [class.open]="open()" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+  </button>
+  @if (open()) {
+    <ul class="theme-menu" role="listbox" aria-label="Theme options">
+      @for (theme of themes; track theme.id) {
+        <li
+          class="theme-option"
+          [class.selected]="themeService.current() === theme.id"
+          role="option"
+          [attr.aria-selected]="themeService.current() === theme.id"
+          (click)="pick(theme.id)"
+        >
+          <span class="theme-swatch" [attr.data-swatch]="theme.id"></span>
+          <span class="theme-option-label">{{ theme.label }}</span>
+          @if (themeService.current() === theme.id) {
+            <svg class="check-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          }
+        </li>
+      }
+    </ul>
+  }
+</div>

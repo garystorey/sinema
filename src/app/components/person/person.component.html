@@ -115,6 +115,8 @@
   </div>
 </div>
 }
-@else {
+@else if (loading) {
+<app-loader message="Loading person..."></app-loader>
+} @else {
 <p class="no-person">No person found</p>
 }
