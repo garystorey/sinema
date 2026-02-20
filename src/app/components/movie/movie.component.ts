@@ -12,6 +12,7 @@ import { MovieService } from '../../services/movie/movie.service';
 import { StorageService } from '../../services/storage/storage.service';
 import { MoviecardComponent } from '../moviecard/moviecard.component';
 import { LoaderComponent } from '../loader/loader.component';
+import { TMDB_POSTER_W500_URL, TMDB_PROFILE_W185_URL } from '../../app.config';
 @Component({
   selector: 'app-movie',
   standalone: true,
@@ -21,12 +22,12 @@ import { LoaderComponent } from '../loader/loader.component';
 })
 export class MovieComponent {
 
-  private movieService = inject(MovieService);
-  private storageService = inject(StorageService);
-  private route = inject(ActivatedRoute);
-  private destroyRef = inject(DestroyRef);
-  private location = inject(Location);
-  private sanitizer = inject(DomSanitizer);
+  private readonly movieService = inject(MovieService);
+  private readonly storageService = inject(StorageService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly location = inject(Location);
+  private readonly sanitizer = inject(DomSanitizer);
 
   isFavorited: boolean = false;
   loading: boolean = true;
@@ -41,8 +42,8 @@ export class MovieComponent {
   showTrailer: boolean = false;
   relatedMovies: Movie[] = [];
   posterFailed: boolean = false;
-  posterPath: string = 'https://image.tmdb.org/t/p/w500';
-  profilePath: string = 'https://image.tmdb.org/t/p/w185';
+  readonly posterPath: string = TMDB_POSTER_W500_URL;
+  readonly profilePath: string = TMDB_PROFILE_W185_URL;
 
   constructor() {
     this.route.paramMap.pipe(
@@ -76,7 +77,7 @@ export class MovieComponent {
         this.directors = credits.crew.filter(c => c.job === 'Director');
         this.topCast = credits.cast.slice(0, 6);
 
-        const keyJobs = ['Director', 'Writer', 'Screenplay', 'Producer', 'Executive Producer', 'Director of Photography', 'Original Music Composer', 'Editor'];
+        const keyJobs: readonly string[] = ['Director', 'Writer', 'Screenplay', 'Producer', 'Executive Producer', 'Director of Photography', 'Original Music Composer', 'Editor'];
         const seen = new Set<number>();
         this.topCrew = credits.crew
           .filter(c => keyJobs.includes(c.job))

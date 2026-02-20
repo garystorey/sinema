@@ -9,6 +9,7 @@ import { Movie } from '../../models/movie';
 import { MovieService } from '../../services/movie/movie.service';
 import { MoviecardComponent } from '../moviecard/moviecard.component';
 import { LoaderComponent } from '../loader/loader.component';
+import { TMDB_PROFILE_W500_URL } from '../../app.config';
 
 @Component({
   selector: 'app-person',
@@ -19,17 +20,17 @@ import { LoaderComponent } from '../loader/loader.component';
 })
 export class PersonComponent {
 
-  private movieService = inject(MovieService);
-  private route = inject(ActivatedRoute);
-  private destroyRef = inject(DestroyRef);
-  private location = inject(Location);
+  private readonly movieService = inject(MovieService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly location = inject(Location);
 
   loading: boolean = true;
   person: Person = {} as Person;
   actingMovies: Movie[] = [];
   crewMovies: Movie[] = [];
   profileFailed: boolean = false;
-  profilePath: string = 'https://image.tmdb.org/t/p/w500';
+  readonly profilePath: string = TMDB_PROFILE_W500_URL;
 
   constructor() {
     this.route.paramMap.pipe(
