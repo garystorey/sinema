@@ -1,5 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { Movie } from '../../models/movie';
 import { MovieCredits } from '../../models/credits';
 import { MovieCollection } from '../../models/collection';
@@ -31,8 +32,8 @@ export class MovieService {
     return url.toString();
   }
 
-  getMovies(searchQuery: string) {
-    return this.http.get<Movie[]>(
+  getMovies(searchQuery: string): Observable<MovieSearchResponse> {
+    return this.http.get<MovieSearchResponse>(
       this.buildUrl('discover/movie', { query: searchQuery }),
     );
   }
@@ -85,7 +86,7 @@ export class MovieService {
     );
   }
 
-  searchMovies(query: string, page: number = 1) {
+  searchMovies(query: string, page: number = 1): Observable<MovieSearchResponse> {
     return this.http.get<MovieSearchResponse>(
       this.buildUrl('search/movie', { query, page }),
     );
