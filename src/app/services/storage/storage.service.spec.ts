@@ -23,7 +23,7 @@ describe('StorageService', () => {
 
     expect(service.getItem('any-key')).toBeNull();
     expect(service.getFavorites()).toEqual([]);
-    expect(service.isFavorite('movie-id')).toBeFalse();
+    expect(service.isFavorite(1)).toBeFalse();
     expect(() => service.setItem('any-key', 'any-value')).not.toThrow();
     expect(() => service.removeItem('any-key')).not.toThrow();
     expect(() => service.clear()).not.toThrow();

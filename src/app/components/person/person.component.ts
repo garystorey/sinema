@@ -50,7 +50,7 @@ export class PersonComponent {
     } = credit;
 
     return {
-      id: String(id),
+      id,
       title,
       poster_path: poster_path ?? '',
       overview,
