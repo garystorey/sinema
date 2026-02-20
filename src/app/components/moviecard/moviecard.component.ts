@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { Movie } from '../../models/movie';
 import { RouterLink } from '@angular/router';
+import { TMDB_POSTER_W500_URL } from '../../app.config';
 
 @Component({
   selector: 'app-moviecard',
@@ -11,7 +12,7 @@ import { RouterLink } from '@angular/router';
 })
 export class MoviecardComponent {
   @Input() movie: Movie = {} as Movie;
-  posterPath: string = 'https://image.tmdb.org/t/p/w500';
+  readonly posterPath: string = TMDB_POSTER_W500_URL;
 
 
 }
