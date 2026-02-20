@@ -73,19 +73,19 @@ export class StorageService {
   addFavorite(movie: Movie): void {
     const favorites = this.getFavorites();
 
-    if (!favorites.some(f => String(f.id) === String(movie.id))) {
+    if (!favorites.some(f => f.id === movie.id)) {
       favorites.push(movie);
       this.setItem(this.FAVORITES_KEY, JSON.stringify(favorites));
     }
   }
 
-  removeFavorite(movieId: string): void {
-    const favorites = this.getFavorites().filter(f => String(f.id) !== String(movieId));
+  removeFavorite(movieId: number): void {
+    const favorites = this.getFavorites().filter(f => f.id !== movieId);
     this.setItem(this.FAVORITES_KEY, JSON.stringify(favorites));
   }
 
-  isFavorite(movieId: string): boolean {
-    return this.getFavorites().some(f => String(f.id) === String(movieId));
+  isFavorite(movieId: number): boolean {
+    return this.getFavorites().some(f => f.id === movieId);
   }
 
 }

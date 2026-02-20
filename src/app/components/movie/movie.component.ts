@@ -65,7 +65,7 @@ export class MovieComponent {
         this.loading = false;
         this.movie = movie;
         this.posterFailed = false;
-        this.isFavorited = this.storageService.isFavorite(String(movie.id));
+        this.isFavorited = this.storageService.isFavorite(movie.id);
 
         if (movie.genres?.length) {
           this.genreNames = movie.genres.map(g => g.name);
@@ -107,10 +107,10 @@ export class MovieComponent {
           ).subscribe({
             next: (collection) => {
               const collectionParts = collection.parts
-                .filter(p => String(p.id) !== String(movie.id))
+                .filter(p => p.id !== movie.id)
                 .sort((a, b) => (a.release_date ?? '').localeCompare(b.release_date ?? ''));
-              const recIds = new Set(collectionParts.map(p => String(p.id)));
-              const filteredRecs = recMovies.filter(r => !recIds.has(String(r.id)));
+              const recIds = new Set(collectionParts.map(p => p.id));
+              const filteredRecs = recMovies.filter(r => !recIds.has(r.id));
               this.relatedMovies = [...collectionParts, ...filteredRecs].slice(0, 12);
             },
             error: () => {
@@ -164,7 +164,7 @@ export class MovieComponent {
 
   toggleFavorite(): void {
     if (this.isFavorited) {
-      this.storageService.removeFavorite(String(this.movie.id));
+      this.storageService.removeFavorite(this.movie.id);
     } else {
       this.storageService.addFavorite(this.movie);
     }
