@@ -1,7 +1,7 @@
 import { Component, DestroyRef, inject } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { CurrencyPipe, DecimalPipe } from '@angular/common';
+import { CurrencyPipe, DecimalPipe, Location } from '@angular/common';
 import { forkJoin } from 'rxjs';
 import { switchMap, filter } from 'rxjs/operators';
 import { Movie } from '../../models/movie';
@@ -24,6 +24,7 @@ export class MovieComponent {
   private storageService = inject(StorageService);
   private route = inject(ActivatedRoute);
   private destroyRef = inject(DestroyRef);
+  private location = inject(Location);
 
   isFavorited: boolean = false;
 
@@ -118,6 +119,10 @@ export class MovieComponent {
         console.error(error);
       }
     });
+  }
+
+  goBack(): void {
+    this.location.back();
   }
 
   getPosterPath(): string {

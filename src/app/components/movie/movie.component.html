@@ -1,5 +1,14 @@
 @if (movie.title) {
 <div class="movie-page">
+  <div class="page-header">
+    <button class="back-btn" (click)="goBack()" aria-label="Go back">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="15 18 9 12 15 6"></polyline>
+      </svg>
+      Back
+    </button>
+    <h1 class="movie-title">{{movie.title}}</h1>
+  </div>
   <div class="main-content">
     <!-- Left: Poster -->
     <div class="poster-section">
@@ -24,8 +33,6 @@
 
     <!-- Right: All Details -->
     <div class="details-section">
-      <h1 class="movie-title">{{movie.title}}</h1>
-
       @if (movie.tagline) {
         <p class="tagline">{{movie.tagline}}</p>
       }

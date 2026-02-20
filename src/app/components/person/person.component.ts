@@ -1,4 +1,5 @@
 import { Component, DestroyRef, inject } from '@angular/core';
+import { Location } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { forkJoin } from 'rxjs';
@@ -21,6 +22,7 @@ export class PersonComponent {
   private movieService = inject(MovieService);
   private route = inject(ActivatedRoute);
   private destroyRef = inject(DestroyRef);
+  private location = inject(Location);
 
   person: Person = {} as Person;
   actingMovies: Movie[] = [];
@@ -88,6 +90,10 @@ export class PersonComponent {
 
   getProfilePath(): string {
     return this.profilePath + this.person.profile_path;
+  }
+
+  goBack(): void {
+    this.location.back();
   }
 
   getAge(): number | null {

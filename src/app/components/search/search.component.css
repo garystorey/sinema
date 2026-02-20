@@ -31,9 +31,9 @@
 }
 
 .search-input-wrapper:focus-within {
-  border-color: rgba(232, 93, 93, 0.4);
+  border-color: var(--glow-accent-strong);
   box-shadow:
-    0 0.5rem 2rem rgba(0, 0, 0, 0.25),
+    0 0.5rem 2rem var(--shadow-soft),
     var(--glow-accent);
   background-color: var(--bg-card-hover);
 }
@@ -113,7 +113,7 @@
 .search-btn:hover {
   opacity: 0.9;
   transform: scale(1.08);
-  box-shadow: 0 4px 16px rgba(232, 93, 93, 0.3);
+  box-shadow: 0 4px 16px var(--glow-accent-medium);
 }
 
 .search-btn:focus-visible {

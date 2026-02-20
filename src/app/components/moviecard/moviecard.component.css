@@ -30,7 +30,7 @@
   transition: opacity 0.3s ease;
   background: linear-gradient(
     to top,
-    rgba(232, 93, 93, 0.15) 0%,
+    var(--glow-accent-subtle) 0%,
     transparent 50%
   );
   pointer-events: none;
@@ -39,7 +39,7 @@
 .movie-card:hover {
   transform: translateY(-6px) scale(1.02);
   box-shadow: var(--shadow-elevated);
-  border-color: rgba(232, 93, 93, 0.2);
+  border-color: var(--glow-accent-border);
 }
 
 .movie-card:hover::after {
@@ -63,7 +63,7 @@
 
 .movie-card-placeholder h2 {
   text-align: center;
-  background: linear-gradient(transparent 20%, rgba(0, 0, 0, 0.6));
+  background: linear-gradient(transparent 20%, var(--overlay-medium));
 }
 
 .placeholder-icon {
@@ -75,8 +75,8 @@
   font-size: 0.875rem;
   font-weight: 600;
   text-align: left;
-  color: #ffffff;
-  background: linear-gradient(transparent, rgba(0, 0, 0, 0.9));
+  color: var(--text-on-image);
+  background: linear-gradient(transparent, var(--overlay-heavy));
   padding: 3rem 0.75rem 0.75rem;
   margin: 0;
   width: 100%;
@@ -86,6 +86,6 @@
   bottom: 0;
   left: 0;
   line-height: 1.3;
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+  text-shadow: 0 1px 4px var(--shadow-strong);
   z-index: 1;
 }

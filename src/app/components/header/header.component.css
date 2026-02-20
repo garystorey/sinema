@@ -2,7 +2,7 @@
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(var(--header-bg-rgb, 10, 10, 14), 0.85);
+  background: var(--header-bg);
   backdrop-filter: blur(16px) saturate(180%);
   -webkit-backdrop-filter: blur(16px) saturate(180%);
   border-bottom: 1px solid var(--divider);
@@ -79,9 +79,9 @@
 }
 
 .header-search-wrapper:focus-within {
-  border-color: rgba(232, 93, 93, 0.4);
+  border-color: var(--glow-accent-strong);
   box-shadow:
-    0 0.25rem 1rem rgba(0, 0, 0, 0.2),
+    0 0.25rem 1rem var(--shadow-soft),
     var(--glow-accent);
   background-color: var(--bg-card-hover);
 }

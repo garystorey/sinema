@@ -1,17 +1,11 @@
 <header class="site-header" role="banner">
   <nav class="header-inner" aria-label="Main navigation">
-    <a routerLink="/" class="logo-link" aria-label="CineGuru home">
+    <a routerLink="/" class="logo-link" aria-label="Sinema home">
       <svg class="logo-icon" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect>
-        <line x1="7" y1="2" x2="7" y2="22"></line>
-        <line x1="17" y1="2" x2="17" y2="22"></line>
-        <line x1="2" y1="12" x2="22" y2="12"></line>
-        <line x1="2" y1="7" x2="7" y2="7"></line>
-        <line x1="2" y1="17" x2="7" y2="17"></line>
-        <line x1="17" y1="7" x2="22" y2="7"></line>
-        <line x1="17" y1="17" x2="22" y2="17"></line>
+        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+        <circle cx="12" cy="12" r="3"></circle>
       </svg>
-      <span class="logo-text">Cine<span class="logo-accent">Guru</span></span>
+      <span class="logo-text">Sin<span class="logo-accent">ema</span></span>
     </a>
     <form class="header-search-form" role="search" aria-label="Movie search" (submit)="$event.preventDefault(); submitSearch()">
       <div class="header-search-wrapper">
@@ -26,6 +20,7 @@
           aria-label="Search for movies"
           [value]="searchQuery()"
           (input)="onSearchInput($event)"
+          autofocus
         />
         @if (searchQuery()) {
           <button type="button" class="header-clear-btn" (click)="clearSearch()" aria-label="Clear search">

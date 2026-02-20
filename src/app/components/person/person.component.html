@@ -1,5 +1,14 @@
 @if (person.name) {
 <div class="person-page">
+  <div class="page-header">
+    <button class="back-btn" (click)="goBack()" aria-label="Go back">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="15 18 9 12 15 6"></polyline>
+      </svg>
+      Back
+    </button>
+    <h1 class="person-name">{{person.name}}</h1>
+  </div>
   <div class="main-content">
     <!-- Left: Photo -->
     <div class="photo-section">
@@ -18,8 +27,6 @@
 
     <!-- Right: Details -->
     <div class="details-section">
-      <h1 class="person-name">{{person.name}}</h1>
-
       @if (person.known_for_department) {
         <span class="department-tag">{{person.known_for_department}}</span>
       }
@@ -82,30 +89,30 @@
         </div>
       }
 
+      @if (actingMovies.length > 0) {
+        <div class="credits-section">
+          <h2 class="section-title">Filmography ({{actingMovies.length}})</h2>
+          <div class="credits-grid">
+            @for (movie of actingMovies; track movie.id) {
+              <app-moviecard [movie]="movie"></app-moviecard>
+            }
+          </div>
+        </div>
+      }
+
+      @if (crewMovies.length > 0) {
+        <div class="credits-section">
+          <h2 class="section-title">Crew Credits ({{crewMovies.length}})</h2>
+          <div class="credits-grid">
+            @for (movie of crewMovies; track movie.id) {
+              <app-moviecard [movie]="movie"></app-moviecard>
+            }
+          </div>
+        </div>
+      }
+
     </div>
   </div>
-
-  @if (actingMovies.length > 0) {
-    <div class="credits-section">
-      <h2 class="section-title">Filmography ({{actingMovies.length}})</h2>
-      <div class="credits-grid">
-        @for (movie of actingMovies; track movie.id) {
-          <app-moviecard [movie]="movie"></app-moviecard>
-        }
-      </div>
-    </div>
-  }
-
-  @if (crewMovies.length > 0) {
-    <div class="credits-section">
-      <h2 class="section-title">Crew Credits ({{crewMovies.length}})</h2>
-      <div class="credits-grid">
-        @for (movie of crewMovies; track movie.id) {
-          <app-moviecard [movie]="movie"></app-moviecard>
-        }
-      </div>
-    </div>
-  }
 </div>
 }
 @else {
