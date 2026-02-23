@@ -6,11 +6,12 @@ import { MovieCollection } from '../../models/collection';
 import { MovieSearchResponse } from '../../models/search';
 import { MovieVideosResponse } from '../../models/video';
 import { Person, PersonMovieCredits } from '../../models/person';
+import { environment } from '../../../environments/environment';
 
 // connect to to tmdb api
 // https://api.themoviedb.org/3/discover/movie?api_key=YOUR_API_KEY
 
-const YOUR_API_KEY = 'b878f255836a67e76ca1b65069462397';
+const YOUR_API_KEY = environment.tmdbApiKey;
 
 @Injectable({
   providedIn: 'root',
