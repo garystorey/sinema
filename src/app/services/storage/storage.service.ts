@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { Movie } from '../../models/movie';
-
 
 // interact with local storage
 @Injectable({
@@ -10,44 +10,82 @@ export class StorageService {
 
   private readonly FAVORITES_KEY = 'favorites';
 
-  constructor() { }
+  constructor(@Inject(PLATFORM_ID) private platformId: object) { }
 
-  getItem(key: string) {
-    return localStorage.getItem(key) as string;
+  private getStorage(): Storage | null {
+    if (!isPlatformBrowser(this.platformId)) {
+      return null;
+    }
+
+    try {
+      return localStorage;
+    } catch {
+      return null;
+    }
   }
 
-  setItem(key: string, value: string) {
-    localStorage.setItem(key, value);
+  getItem(key: string): string | null {
+    try {
+      return this.getStorage()?.getItem(key) ?? null;
+    } catch {
+      return null;
+    }
   }
 
-  removeItem(key: string) {
-    localStorage.removeItem(key);
+  setItem(key: string, value: string): void {
+    try {
+      this.getStorage()?.setItem(key, value);
+    } catch {
+      // no-op when storage is unavailable
+    }
   }
 
-  clear() {
-    localStorage.clear();
+  removeItem(key: string): void {
+    try {
+      this.getStorage()?.removeItem(key);
+    } catch {
+      // no-op when storage is unavailable
+    }
+  }
+
+  clear(): void {
+    try {
+      this.getStorage()?.clear();
+    } catch {
+      // no-op when storage is unavailable
+    }
   }
 
   getFavorites(): Movie[] {
-    const raw = localStorage.getItem(this.FAVORITES_KEY);
-    return raw ? JSON.parse(raw) : [];
+    const raw = this.getItem(this.FAVORITES_KEY);
+
+    if (!raw) {
+      return [];
+    }
+
+    try {
+      return JSON.parse(raw) as Movie[];
+    } catch {
+      return [];
+    }
   }
 
   addFavorite(movie: Movie): void {
     const favorites = this.getFavorites();
-    if (!favorites.some(f => String(f.id) === String(movie.id))) {
+
+    if (!favorites.some(f => f.id === movie.id)) {
       favorites.push(movie);
-      localStorage.setItem(this.FAVORITES_KEY, JSON.stringify(favorites));
+      this.setItem(this.FAVORITES_KEY, JSON.stringify(favorites));
     }
   }
 
-  removeFavorite(movieId: string): void {
-    const favorites = this.getFavorites().filter(f => String(f.id) !== String(movieId));
-    localStorage.setItem(this.FAVORITES_KEY, JSON.stringify(favorites));
+  removeFavorite(movieId: number): void {
+    const favorites = this.getFavorites().filter(f => f.id !== movieId);
+    this.setItem(this.FAVORITES_KEY, JSON.stringify(favorites));
   }
 
-  isFavorite(movieId: string): boolean {
-    return this.getFavorites().some(f => String(f.id) === String(movieId));
+  isFavorite(movieId: number): boolean {
+    return this.getFavorites().some(f => f.id === movieId);
   }
 
 }

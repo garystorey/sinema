@@ -25,3 +25,13 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+
+## TMDB API configuration
+
+Angular uses `src/environments/*` for runtime configuration.
+
+1. Set your TMDB values in `src/environments/environment.ts` for local development:
+   - `tmdbApiKey`
+   - `tmdbBaseUrl`
+2. Set production values in `src/environments/environment.prod.ts` for production builds.
+3. Keep committed values as placeholders and do not commit real API keys.

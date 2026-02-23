@@ -12,22 +12,22 @@ import { MovieService } from '../../services/movie/movie.service';
 import { StorageService } from '../../services/storage/storage.service';
 import { MoviecardComponent } from '../moviecard/moviecard.component';
 import { LoaderComponent } from '../loader/loader.component';
+import { TMDB_POSTER_W500_URL, TMDB_PROFILE_W185_URL } from '../../app.config';
 @Component({
   selector: 'app-movie',
   standalone: true,
   imports: [DecimalPipe, CurrencyPipe, RouterLink, MoviecardComponent, LoaderComponent],
-  providers: [MovieService],
   templateUrl: './movie.component.html',
   styleUrl: './movie.component.css'
 })
 export class MovieComponent {
 
-  private movieService = inject(MovieService);
-  private storageService = inject(StorageService);
-  private route = inject(ActivatedRoute);
-  private destroyRef = inject(DestroyRef);
-  private location = inject(Location);
-  private sanitizer = inject(DomSanitizer);
+  private readonly movieService = inject(MovieService);
+  private readonly storageService = inject(StorageService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly location = inject(Location);
+  private readonly sanitizer = inject(DomSanitizer);
 
   isFavorited: boolean = false;
   loading: boolean = true;
@@ -42,8 +42,8 @@ export class MovieComponent {
   showTrailer: boolean = false;
   relatedMovies: Movie[] = [];
   posterFailed: boolean = false;
-  posterPath: string = 'https://image.tmdb.org/t/p/w500';
-  profilePath: string = 'https://image.tmdb.org/t/p/w185';
+  readonly posterPath: string = TMDB_POSTER_W500_URL;
+  readonly profilePath: string = TMDB_PROFILE_W185_URL;
 
   constructor() {
     this.route.paramMap.pipe(
@@ -65,7 +65,7 @@ export class MovieComponent {
         this.loading = false;
         this.movie = movie;
         this.posterFailed = false;
-        this.isFavorited = this.storageService.isFavorite(String(movie.id));
+        this.isFavorited = this.storageService.isFavorite(movie.id);
 
         if (movie.genres?.length) {
           this.genreNames = movie.genres.map(g => g.name);
@@ -77,7 +77,7 @@ export class MovieComponent {
         this.directors = credits.crew.filter(c => c.job === 'Director');
         this.topCast = credits.cast.slice(0, 6);
 
-        const keyJobs = ['Director', 'Writer', 'Screenplay', 'Producer', 'Executive Producer', 'Director of Photography', 'Original Music Composer', 'Editor'];
+        const keyJobs: readonly string[] = ['Director', 'Writer', 'Screenplay', 'Producer', 'Executive Producer', 'Director of Photography', 'Original Music Composer', 'Editor'];
         const seen = new Set<number>();
         this.topCrew = credits.crew
           .filter(c => keyJobs.includes(c.job))
@@ -107,10 +107,10 @@ export class MovieComponent {
           ).subscribe({
             next: (collection) => {
               const collectionParts = collection.parts
-                .filter(p => String(p.id) !== String(movie.id))
+                .filter(p => p.id !== movie.id)
                 .sort((a, b) => (a.release_date ?? '').localeCompare(b.release_date ?? ''));
-              const recIds = new Set(collectionParts.map(p => String(p.id)));
-              const filteredRecs = recMovies.filter(r => !recIds.has(String(r.id)));
+              const recIds = new Set(collectionParts.map(p => p.id));
+              const filteredRecs = recMovies.filter(r => !recIds.has(r.id));
               this.relatedMovies = [...collectionParts, ...filteredRecs].slice(0, 12);
             },
             error: () => {
@@ -164,7 +164,7 @@ export class MovieComponent {
 
   toggleFavorite(): void {
     if (this.isFavorited) {
-      this.storageService.removeFavorite(String(this.movie.id));
+      this.storageService.removeFavorite(this.movie.id);
     } else {
       this.storageService.addFavorite(this.movie);
     }

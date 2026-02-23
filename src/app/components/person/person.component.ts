@@ -4,33 +4,67 @@ import { ActivatedRoute } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { forkJoin } from 'rxjs';
 import { switchMap, filter } from 'rxjs/operators';
-import { Person } from '../../models/person';
+import { Person, PersonCastCredit, PersonCrewCredit } from '../../models/person';
 import { Movie } from '../../models/movie';
 import { MovieService } from '../../services/movie/movie.service';
 import { MoviecardComponent } from '../moviecard/moviecard.component';
 import { LoaderComponent } from '../loader/loader.component';
+import { TMDB_PROFILE_W500_URL } from '../../app.config';
 
 @Component({
   selector: 'app-person',
   standalone: true,
   imports: [MoviecardComponent, LoaderComponent],
-  providers: [MovieService],
   templateUrl: './person.component.html',
   styleUrl: './person.component.css'
 })
 export class PersonComponent {
 
-  private movieService = inject(MovieService);
-  private route = inject(ActivatedRoute);
-  private destroyRef = inject(DestroyRef);
-  private location = inject(Location);
+  private readonly movieService = inject(MovieService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly location = inject(Location);
 
   loading: boolean = true;
   person: Person = {} as Person;
   actingMovies: Movie[] = [];
   crewMovies: Movie[] = [];
   profileFailed: boolean = false;
-  profilePath: string = 'https://image.tmdb.org/t/p/w500';
+  readonly profilePath: string = TMDB_PROFILE_W500_URL;
+
+  private toMovie(credit: PersonCastCredit | PersonCrewCredit): Movie {
+    const {
+      id,
+      title,
+      poster_path,
+      overview,
+      release_date,
+      vote_average,
+      vote_count,
+      backdrop_path,
+      original_title,
+      original_language,
+      genre_ids,
+      popularity,
+      video
+    } = credit;
+
+    return {
+      id,
+      title,
+      poster_path: poster_path ?? '',
+      overview,
+      release_date,
+      vote_average,
+      vote_count,
+      backdrop_path: backdrop_path ?? '',
+      original_title,
+      original_language,
+      genre_ids,
+      popularity,
+      video
+    };
+  }
 
   constructor() {
     this.route.paramMap.pipe(
@@ -49,22 +83,6 @@ export class PersonComponent {
         this.person = person;
         this.profileFailed = false;
 
-        const toMovie = (c: any): Movie => ({
-          id: String(c.id),
-          title: c.title,
-          poster_path: c.poster_path ?? '',
-          overview: c.overview,
-          release_date: c.release_date,
-          vote_average: c.vote_average,
-          vote_count: c.vote_count,
-          backdrop_path: c.backdrop_path ?? '',
-          original_title: c.original_title,
-          original_language: c.original_language,
-          genre_ids: c.genre_ids,
-          popularity: c.popularity,
-          video: c.video
-        });
-
         const seenCast = new Set<number>();
         this.actingMovies = [...credits.cast]
           .sort((a, b) => b.popularity - a.popularity)
@@ -73,7 +91,7 @@ export class PersonComponent {
             seenCast.add(c.id);
             return true;
           })
-          .map(toMovie);
+          .map(credit => this.toMovie(credit));
 
         const seenCrew = new Set<number>();
         this.crewMovies = [...credits.crew]
@@ -83,7 +101,7 @@ export class PersonComponent {
             seenCrew.add(c.id);
             return true;
           })
-          .map(toMovie);
+          .map(credit => this.toMovie(credit));
       },
       error: (error) => {
         this.loading = false;
